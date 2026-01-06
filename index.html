@@ -1,0 +1,200 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matrix Nexus - Advanced Element-wise Operations</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+  <div class="matrix-bg">
+    <canvas id="matrix-rain"></canvas>
+  </div>
+
+  <div class="container">
+    <header class="header">
+      <h1 class="glitch" data-text="MATRIX NEXUS">MATRIX NEXUS</h1>
+      <p class="subtitle">Advanced Element-wise Operations Calculator</p>
+      <div class="status-bar">
+        <span class="status-indicator" id="status">SYSTEM READY</span>
+        <span class="cpu-usage">CPU: <span id="cpu">12%</span></span>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="control-panel">
+        <div class="operation-selector">
+          <h3><i class="fas fa-cogs"></i> Operation Mode</h3>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="operation-type" value="matrix" checked>
+              <span class="radio-custom"></span>
+              Matrix-Matrix
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="operation-type" value="scalar">
+              <span class="radio-custom"></span>
+              Scalar-Matrix
+            </label>
+          </div>
+        </div>
+
+        <div class="operation-buttons">
+          <h3><i class="fas fa-calculator"></i> Operations</h3>
+          <div class="btn-grid">
+            <button class="op-btn" data-op="add" data-full="Addition">
+              <i class="fas fa-plus"></i>
+              <span>ADD</span>
+            </button>
+            <button class="op-btn" data-op="sub" data-full="Subtraction">
+              <i class="fas fa-minus"></i>
+              <span>SUB</span>
+            </button>
+            <button class="op-btn" data-op="mult" data-full="Multiplication">
+              <i class="fas fa-times"></i>
+              <span>MUL</span>
+            </button>
+            <button class="op-btn" data-op="div" data-full="Division">
+              <i class="fas fa-divide"></i>
+              <span>DIV</span>
+            </button>
+            <button class="op-btn" data-op="exp" data-full="Exponentiation">
+              <i class="fas fa-superscript"></i>
+              <span>EXP</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="matrix-config">
+          <h3><i class="fas fa-th"></i> Matrix Dimensions</h3>
+          <div class="dimension-controls">
+            <div class="dim-input">
+              <label>Rows:</label>
+              <input type="number" id="rows" value="2" min="1" max="8">
+            </div>
+            <div class="dim-input">
+              <label>Columns:</label>
+              <input type="number" id="cols" value="2" min="1" max="8">
+            </div>
+            <button id="apply-dims" class="apply-btn">
+              <i class="fas fa-check"></i> Apply
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="matrix-workspace">
+        <div class="matrix-container" id="matrix1-container">
+          <h3><i class="fas fa-matrix"></i> Matrix A</h3>
+          <div class="matrix-input" id="matrix1"></div>
+          <div class="matrix-actions">
+            <button class="action-btn" onclick="fillRandom('matrix1')">
+              <i class="fas fa-dice"></i> Random
+            </button>
+            <button class="action-btn" onclick="fillIdentity('matrix1')">
+              <i class="fas fa-identity"></i> Identity
+            </button>
+            <button class="action-btn" onclick="clearMatrix('matrix1')">
+              <i class="fas fa-eraser"></i> Clear
+            </button>
+          </div>
+        </div>
+
+        <div class="operation-display">
+          <div class="operation-symbol" id="op-symbol">+</div>
+          <div class="operation-type" id="op-type">Matrix Addition</div>
+        </div>
+
+        <div class="matrix-container" id="matrix2-container">
+          <h3><i class="fas fa-matrix"></i> Matrix B</h3>
+          <div class="matrix-input" id="matrix2"></div>
+          <div class="matrix-actions">
+            <button class="action-btn" onclick="fillRandom('matrix2')">
+              <i class="fas fa-dice"></i> Random
+            </button>
+            <button class="action-btn" onclick="fillIdentity('matrix2')">
+              <i class="fas fa-identity"></i> Identity
+            </button>
+            <button class="action-btn" onclick="clearMatrix('matrix2')">
+              <i class="fas fa-eraser"></i> Clear
+            </button>
+          </div>
+        </div>
+
+        <div class="equals-sign">=</div>
+
+        <div class="matrix-container">
+          <h3><i class="fas fa-result"></i> Result</h3>
+          <div class="matrix-display" id="result-matrix"></div>
+          <div class="result-actions">
+            <button class="action-btn" onclick="copyResult()">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+            <button class="action-btn" onclick="exportResult()">
+              <i class="fas fa-download"></i> Export
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="advanced-panel">
+        <div class="history-panel">
+          <h3><i class="fas fa-history"></i> Operation History</h3>
+          <div class="history-list" id="history"></div>
+          <button class="clear-history-btn" onclick="clearHistory()">
+            <i class="fas fa-trash"></i> Clear History
+          </button>
+        </div>
+
+        <div class="analytics-panel">
+          <h3><i class="fas fa-chart-line"></i> Performance Analytics</h3>
+          <div class="metrics">
+            <div class="metric">
+              <span class="metric-label">Operations/sec:</span>
+              <span class="metric-value" id="ops-per-sec">0</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Avg. Time:</span>
+              <span class="metric-value" id="avg-time">0ms</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Total Ops:</span>
+              <span class="metric-value" id="total-ops">0</span>
+            </div>
+          </div>
+          <canvas id="performance-chart"></canvas>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <span class="copyright">© 2024 Matrix Nexus - Advanced Computing Systems</span>
+        <div class="footer-links">
+          <a href="#" onclick="showHelp()"><i class="fas fa-question-circle"></i> Help</a>
+          <a href="#" onclick="showAbout()"><i class="fas fa-info-circle"></i> About</a>
+          <a href="#" onclick="showSettings()"><i class="fas fa-cog"></i> Settings</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modal for notifications -->
+  <div class="modal" id="notification-modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Particle system canvas -->
+  <canvas id="particle-canvas"></canvas>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
